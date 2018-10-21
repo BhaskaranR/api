@@ -1,0 +1,35 @@
+{
+  "env": {
+      "log": {
+        "pathFileLogFile": "PATHFILELOGFILE",
+        "fileLogLevel": "FILELOGLEVEL",
+        "pathLogFileError": "PATHLOGFILEERROR"
+      },
+      "host":{
+        "karmasoc-mediaserve": "MEDIASERVE_HOST"
+      },
+      "port": {
+        "karmasoc-web-server":  "WEBSERVICE_PORT",
+        "karmasoc-user": "USER_PORT",
+        "karmasoc-posts": "POSTS_PORT",
+        "karmasoc-email": "EMAIL_PORT",
+        "karmasoc-mediaserve": "MEDIASERVE_PORT"
+      }
+  },
+  "db": {
+    "karmasoc-user": {
+      "dbcon": "MONGODB_CON"
+    },
+    "karmasoc-posts":{
+      "dbHost": "MONGODB_POST_HOST",
+      "dbPort":"MONGODB_POST_PORT",
+      "dbName":"posts"
+    },
+    "karamsoc-mediaserve":{
+      "dbHost": "MONGODB_MEDIASERVE_HOST",
+      "dbPort":"MONGODB_MEDIASERVE_PORT"
+    }
+  },
+  "jwtSecret": "JWTSECRET",
+  "apolloEngineKey":"APOLLO_ENGINE_API_KEY"
+}

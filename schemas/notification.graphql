@@ -1,0 +1,8 @@
+type Notification {
+    title: String!
+    body: String!
+    dir: String
+    tag: String
+    renotify: Boolean
+    vibrate: [Int]
+}

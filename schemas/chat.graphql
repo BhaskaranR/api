@@ -1,0 +1,173 @@
+type Mutation {
+    leaveChannel(channelId: String!): Boolean @auth
+    hideChannel(channelId: String!): Boolean @auth
+    setStatus(status: UserStatus!): User @auth
+    createChannel(name: String!, private: Boolean = false, readOnly: Boolean = false, membersId: [String!]): Channel @auth
+    sendMessage(channelId: String!, content: String!): Message @auth
+    deleteMessage(messageId: MessageIdentifier!): Boolean @auth
+    editMessage(messageId: MessageIdentifier!, content: String!): Message @auth
+    addReactionToMassage(messageId: MessageIdentifier!, icon: String!): Message @auth
+    updateUserSettings(userSettings: UserSettings): User @auth
+    loginWithServiceAccessToken(service: String!, accessToken: String!): LoginResult @auth
+    #updateUserChannelSettings(channelId: String!,settings: ChannelSettings )
+}
+
+type Query {
+    messages(channelId: String, channelDetails: ChannelNameAndDirect, channelName: String, cursor: String, count: Int, searchRegex: String): MessagesWithCursor @auth
+    channelsByUser(userId: String): [Channel] @auth
+    channels(filter: ChannelFilter = {privacy: ALL, joinedChannels: false, sortBy: NAME}): [Channel] @auth
+    channelByName(name: String!, isDirect: Boolean!): Channel @auth
+}
+
+type Subscription {
+    chatMessageAdded(channelId: String!): Message @auth
+}
+
+input ChannelFilter {
+    nameFilter: String
+    privacy: Privacy
+    joinedChannels: Boolean
+    sortBy: ChannelSort
+}
+
+input ChannelNameAndDirect {
+  name: String!
+  direct: Boolean!
+  
+}
+
+enum Privacy {
+    PRIVATE
+    PUBLIC
+    ALL
+}
+
+enum ChannelSort {
+    NAME
+    NUMBER_OF_MESSAGES
+}
+
+type MessagesWithCursor {
+  cursor: String
+  channel: Channel
+  messagesArray: [Message]
+}
+
+
+type Message {
+    id: String
+    author: User
+    content: String
+    creationTime: String
+    channel: Channel
+    fromServer: Boolean #when user joins a channel we get a message from server - text is grey
+    tags: [String]
+    userRef: [User]
+    channelRef: [Channel]
+    reactions: [Reaction]
+}
+
+input MessageIdentifier {
+    channelId: String!
+    messageId: String!
+}
+
+type Reaction {
+    username: String
+    icon: String
+}
+
+extend type User {
+    userPreferences: UserPreferences
+    status: UserStatus
+    avatar: String
+    name: String
+    lastLogin: String
+    channels: [Channel]
+    directMessages: [Channel]
+}
+
+enum UserStatus {
+    ONLINE
+    AWAY
+    BUSY
+    INVISIBLE
+}
+
+type UserPreferences {
+    language: String
+    notificationDuration: Float
+    unreadTrayIconAlert: Boolean
+    useEmojis: Boolean
+    convertAsciiToEmoji: Boolean
+    autoLoadImages: Boolean
+    saveMobileBandwith: Boolean
+    collapseEmbeddedMeida: Boolean
+    unreadRoomsMode: Boolean
+    hideUserName: Boolean
+    hideRoles: Boolean
+    hideRightSideBarWithClick: Boolean
+    hideAvatars: Boolean
+    mergePrivateGroupsWithChannels: Boolean
+    enterKeyBehaviour: String
+    viewMode: String
+    offlineEmailNotifications: String
+    highlights: String
+    newRoomNotificationSound: String
+    newMessageNotificationSound: String
+}
+
+input UserSettings {
+    language: String
+    notificationDuration: Float
+    unreadTrayIconAlert: Boolean
+    useEmojis: Boolean
+    convertAsciiToEmoji: Boolean
+    autoLoadImages: Boolean
+    saveMobileBandwith: Boolean
+    collapseEmbeddedMedia: Boolean
+    unreadRoomsMode: Boolean
+    hideUserName: Boolean
+    hideRoles: Boolean
+    hideRightSideBarWithClick: Boolean
+    hideAvatars: Boolean
+    mergePrivateGroupsWithChannels: Boolean
+    enterKeyBehaviour: String
+    viewMode: String
+    offlineEmailNotifications: String
+    highlights: String
+    newRoomNotificationSound: String
+    newMessageNotificationSound: String
+    email: String
+    avatar: String
+    name: String
+}
+
+type ChannelSettings {
+    disableNotification: Boolean
+    audio: String
+    desktop: String
+    duration: Int
+    mobile: String
+    mail: String
+    hideUnreadRoomStatus : Boolean
+    unreadTrayIconAlert: String
+}
+
+type Channel {
+    id: String
+    name: String
+    # topic: TODO
+    # userNotificationSettings: ChannelSettings
+    description: String
+    announcement: String
+    numberOfMembers: Int
+    members: [User]
+    owners: [User]
+    direct: Boolean
+    privateChannel: Boolean
+    readOnly: Boolean
+    archived: Boolean
+    favorite: Boolean
+    unseenMessages: Int
+}

@@ -1,0 +1,27 @@
+type Reward {
+    pointsInCash: Int
+    currentPoints: Int
+}
+
+type RewardHistory {
+    pointsInCash: Int
+    availablePoints: Int
+    redeemedPoints: Int
+    otherPoints: Int
+}
+
+type RewardsDetail {
+    month: Int
+    year: Int
+    points: Int
+    cashPoints: Int
+}
+
+type Query {
+    getRewards: Reward @auth
+    getRewardsDetail: [RewardsDetail] @auth
+}
+
+type Subscription {
+    rewardEvent: UserEvent
+}

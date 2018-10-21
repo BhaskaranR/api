@@ -1,0 +1,9 @@
+type Error {
+  path: String!
+  message: String
+}
+
+type GenericResponse {
+    ok: Boolean!
+    errors: [Error]
+}

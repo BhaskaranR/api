@@ -1,0 +1,8 @@
+type SearchResult{
+  data: String!
+}
+
+type Query{
+   search(content: String!): SearchResult! @auth
+   suggest(content: String!): SearchResult! @auth
+}

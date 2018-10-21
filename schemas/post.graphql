@@ -1,0 +1,143 @@
+type GeoTag {
+    type: String
+    coordinates: Coordinates
+    title: String
+    placeId: String
+}
+
+type LikeByPost {
+    user: User
+    like: String
+}
+
+enum Bookmark {
+    mypage
+    fun
+    learn
+}
+
+
+type BookMarkPost {
+    user: User
+    bookMark: Bookmark
+}
+
+type Post {
+    _id: ID!
+    title: String
+    content: String
+    mentions: [String]
+    BizId: String
+    geotag: GeoTag
+    photos: [PhotoUrl]
+    withFriends: [User]
+    postType: String
+    visibility: PostVisibility
+    user: User
+    shares: [String]
+    likes: [LikeByPost]
+    bookmarks: [BookMarkPost]
+    fileUrl: [PhotoUrl]
+    commentsCount: Int
+   # comments(prev: String, next: String, limit: Int): CommentsWithCursor
+    create_date: String
+    modified_date: String
+}
+
+
+type PostsWithCursor {
+    #this will tell you if you have next set of records
+  hasNext: Boolean! 
+  hasPrevious: Boolean!
+  next: ID
+  previous: ID
+  posts: [Post]
+}
+
+enum FeedType {
+    Home
+    Photos
+    Videos
+    Fun
+    Learn
+}
+
+enum ViewType {
+    Featured
+    Friends
+    Trending
+    Recommended
+}
+
+type Query {
+    featuredPosts(feedType: FeedType!, prev: String!, next: String!, count: Int!): PostsWithCursor! @auth
+    friendsPosts(feedType: FeedType!, prev: String!, next: String!, count: Int!): PostsWithCursor! @auth
+    trendingPosts(feedType: FeedType!,prev: String!, next: String!, count: Int!): PostsWithCursor! @auth
+    recommendedPosts(feedType: FeedType!,prev: String!, next: String!, count: Int!): PostsWithCursor! @auth
+}
+
+enum PostVisibility {
+    private
+    friends
+    public
+}
+
+enum PostlikeTypes {
+    like
+    heart
+    smile
+    laugh
+    sad
+}
+
+input PostInput  {
+    title: String
+    BizId: String
+    content: String
+    geotag: GeotagInput
+    withFriends: [String]
+    fileIds: [ID]
+    visibility: PostVisibility!
+}
+
+input PostUpdateInput  {
+    _id: ID!
+    title: String
+    content: String
+    bizId: String
+    geotag: GeotagInput
+    withFriends: [String]
+    shares: [String]
+    fileIds: [ID]
+    visibility: PostVisibility!
+}
+
+type NewPostResponse @auth {
+    ok: Boolean!
+    post: Post
+    errors: [Error]
+}
+
+type Mutation {
+    createPost(post: PostInput): NewPostResponse! @auth
+    editPost(post: PostUpdateInput): GenericResponse! @auth
+    deletePost(postId: ID!): GenericResponse! @auth
+    uploadPhoto(file: File!): PhotoUrl! @auth
+    deletePhoto(id: ID!): GenericResponse! @auth
+    deletePhotoFromPost(id: ID!, postId: ID!): GenericResponse! @auth
+    favorPost(postId: ID!, like: PostlikeTypes!): GenericResponse! @auth
+    unFavorPost(postId: String!, like: PostlikeTypes!): GenericResponse! @auth
+    bookMarkPost(postId: ID!, bookMark: Bookmark): GenericResponse! @auth
+    unbookMarkPost(postId: ID!, bookMark: Bookmark): GenericResponse! @auth
+    sharePost(postId: ID!, comment: String): GenericResponse! @auth
+    unsharePost(postId: ID!): GenericResponse! @auth
+}
+
+type PostEvent @auth {
+    event: Events
+    post: Post
+}
+
+type Subscription  {
+    postEvent: PostEvent
+}

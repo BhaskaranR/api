@@ -1,0 +1,9 @@
+enum Events {
+    newFollower
+    followApproved
+    postShared
+    postBookmarked
+    commentAdded
+    reactionAdded
+    rewardsUpdated
+}

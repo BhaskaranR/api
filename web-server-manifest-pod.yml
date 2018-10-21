@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: karmasoc-api
+  labels:
+    environment: dev
+    tier: frontend
+spec:
+  containers:
+    - name: apiserver
+      image: karmasocio/karmasoc-api
+      ports:
+        - containerPort: 8200
+          protocol: TCP

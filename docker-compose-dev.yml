@@ -1,0 +1,10 @@
+version: '2'
+services:
+   karmasoc-api:
+        image: "karmasocio/karmasoc-api"
+        hostname: karmasoc-api
+        restart: always
+        ports:
+          - "8200:8200"
+        environment:
+            FILELOGLEVEL: error

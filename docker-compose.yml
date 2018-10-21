@@ -1,0 +1,13 @@
+version: '2'
+services:
+   karmasoc-api:
+        image: "karmasocio/karmasoc-api"
+        build:
+            context: .
+            dockerfile: Dockerfile.karmasocapi
+        restart: always
+        hostname: karmasoc-api
+        ports:
+          - "8200:8200"
+        environment:
+            FILELOGLEVEL: error

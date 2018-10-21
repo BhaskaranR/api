@@ -1,0 +1,111 @@
+type SubCategory {
+    name: String!
+}
+
+type Category{
+    name: String!
+    category: String!
+    #subCategoty: [Subcategory]
+}
+
+type Business {
+    _id: ID
+    user: User
+    referredBy: User
+    bizName: String
+    category: Category
+    #subCategory: Subcategory
+    zipcode: Int
+    address: String
+    title: String
+    website: String
+    geotag: Geotag
+    followers: [User]
+    followersCount: Int
+}
+
+input BusinessNearbyInput  {
+   maxDistance:  Int!
+   limit: Int!
+   bizName: String
+   coordinates: CoordinatesInput!
+}
+
+input CoordinatesInput {
+    long:Float!
+    lat: Float!
+}
+
+
+type BizResponse {
+    ok: Boolean!
+    business: Business
+    errors: [Error]
+}
+
+
+type BusinessWithCursor{
+  cursor: String
+  businessArray: [Business]
+}
+
+
+input GeotagInput {
+    type: String
+    coordinates: CoordinatesInput
+    title: String
+    placeId: String
+}
+
+input PromoPostInput {
+    title: String
+    content: String
+    geotag: GeotagInput
+    startDate: String
+    endDate: String
+    startTime: String
+    endTime: String
+    bizId: String
+}
+
+input EditBizInput {
+    categoryId: String
+    subcategoryId: String
+    zipcode: Int
+    address: String
+    title: String
+    website: String
+    geotag: GeotagInput
+    bizId:String
+}
+
+input NewBizInput {
+    referredBy: String!
+    categoryId: String!
+    subcategoryId: String!
+    zipcode: Int
+    address: String!
+    title: String
+    website: String
+    geotag: GeotagInput!
+}
+
+type Query {
+    getBizNearby(nearBiz: BusinessNearbyInput): [Business]
+    getPromoBizNearby(nearBiz: BusinessNearbyInput): [Business]
+    getBusiness(bizId: String!): Business
+    getBusinessByName(name: String!): Business
+    getRecommendedBusiness: BusinessWithCursor
+}
+
+type Mutation {
+    createPromoPost(post: PromoPostInput, file: File): GenericResponse! @auth
+    editPromoPost(post: PromoPostInput): GenericResponse! @auth
+    deletePromoPost(postId: String): GenericResponse! @auth
+    referBiz(userId: String, bizId: String): GenericResponse! @auth
+    addBiz(biz: NewBizInput): BizResponse! @auth
+    editBiz(biz: EditBizInput): BizResponse! @auth
+    deleteBiz(bizId: String): GenericResponse! @auth
+    followBiz(bizId: String! ): GenericResponse! @auth
+    unfollowBiz(bizId: String! ): GenericResponse! @auth
+}

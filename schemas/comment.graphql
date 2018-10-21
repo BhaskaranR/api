@@ -1,0 +1,40 @@
+type Subscription {
+    newComment(postId: String!): Comment
+    newReaction(commentId: ID!, icon: String!): Comment
+}
+
+type CommentsWithCursor {
+  hasNext: Boolean!
+  hasPrevious: Boolean!
+  next: ID
+  previous: ID
+  results: [Comment]
+}
+
+type Comment {
+    _id: ID!
+    user: User
+    content: String
+    creationTime: String
+    fromServer: Boolean #when user joins a post we get a message from server - text is grey
+    tags: [String]
+    reactions: [Reaction]
+}
+
+input CommentInput {
+    postId: String!,
+    content: String,
+    fileIds: [ID]
+}
+
+type Query {
+    comment(postId: String!, prev: String, next: String, limit: Int): CommentsWithCursor @auth
+}
+
+type Mutation {
+    addComment(comment: CommentInput!): GenericResponse! @auth
+    deleteComment(commentId: String!): GenericResponse! @auth
+    editComment(commentId:String!, comment: CommentInput!): GenericResponse! @auth
+    addReactionToComment(commentId: String!): GenericResponse! @auth
+    removeReactionToComment(commentId: String!): GenericResponse! @auth
+}

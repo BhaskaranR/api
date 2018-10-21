@@ -1,0 +1,27 @@
+type Coordinates {
+    lat: Float!
+    long: Float!
+}
+
+type Geotag {
+    type: String
+    coordinates: Coordinates
+}
+type Place {
+    id: String!,
+    title: String!,
+    distance: Float!,
+    geotag: Geotag
+}
+
+input GetNearByInput {
+    name: String, 
+    lat: Float,
+    long: Float,
+    maxDistance: Int,
+    limit: Int!
+}
+
+type Query {
+    getPlacesNearby(nearby: GetNearByInput): [Place] @auth
+}

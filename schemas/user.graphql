@@ -1,0 +1,223 @@
+
+type UserGroup {
+    _id: String
+    icon: String
+    name: String
+}
+
+type Email {
+    email: String
+    emailType: String
+}
+
+input EmailInput {
+    email: String
+    emailType: String
+}
+
+type Phone {
+    phoneNumber: String
+    phoneType: String
+}
+
+input PhoneInput {
+    phoneNumber: String
+    phoneType: String
+}
+
+type Address {
+    address: String
+}
+
+input AddressInput {
+    address: String
+}
+
+type PersonalContact {
+    website: [Email]
+    phonenumber: [Phone]
+    address: [Address]
+    visibility: String
+}
+
+input PersonalContactInput {
+    website: [EmailInput]
+    phonenumber: [PhoneInput]
+    address: [AddressInput]
+    visibility: String
+}
+
+type PersonalInfo {
+    gender: String
+    birthday: String
+    occupation: String
+    visibility: String
+}
+
+input PersonalInfoInput {
+    gender: String
+    birthday: String
+    occupation: String
+    visibility: String
+}
+
+type CustomUrls {
+    customUrls: [String]
+    visibility: String
+}
+
+input CustomUrlsInput {
+    customUrls: [String]
+    visibility: String
+}
+
+type Places {
+    currentPlace: String
+    livedPlaces: [String]
+}
+
+type PlacesHistory {
+    placesHistory: [Places]
+    visibility: String
+}
+
+
+input PlacesInput {
+    currentPlace: String
+    livedPlaces: [String]
+}
+
+input PlacesHistoryInput {
+    placesHistory: [PlacesInput]
+    visibility: String
+}
+
+
+type WorkHistory {
+    workHistory: [String]
+    visibility: String
+}
+
+input WorkHistoryInput {
+    workHistory: [String]
+    visibility: String
+}
+
+
+type Story {
+    story: String
+    tagline: String
+}
+
+input StoryInput {
+    story: String
+    tagline: String
+}
+
+type EducationHistory {
+    schoolName: String
+    major: String
+    year: Int
+    endyear: Int
+    description: String
+}
+
+extend type EducationHistory {
+    educationHistory: [EducationHistory]
+    visibility: String
+}
+
+input EducationHistoryInput{
+    schoolName: String
+    major: String
+    year: Int
+    endyear: Int
+    description: String
+}
+
+input Education {
+    educationHistory: [EducationHistoryInput]
+    visibility: String
+}
+
+type Profile {
+    name: String
+    fbId: String
+    googlePlusId: String
+    firstName: String
+    lastName: String
+    requesting_device_id: String
+    strategy: String
+    avatarId: String
+    images: PhotoUrl
+    userPersonalContact: PersonalContact
+    personalContact: PersonalContact
+    personalInfo: PersonalInfo
+    userCustomUrls: CustomUrls
+    placesHistory: PlacesHistory
+    workHistory: WorkHistory
+    educationHistory: [EducationHistory]
+    userStory: Story
+    backgroundImage: PhotoUrl
+    profileSet: Boolean
+}
+
+
+extend type User {
+    profile: Profile
+    postsCount: Int
+    followersCount: Int
+    followingCount: Int
+    referredUsers: [User]
+    followersUsers(cursor: String, limit: Int): UsersWithCursor
+    followingUsers(cursor: String, limit: Int): UsersWithCursor
+    followingBusiness: [Business]
+    mybusinesses: [Business]
+    post(prev: String, next: String, limit: Int): PostsWithCursor
+    imagePost(prev: String, next: String, limit: Int): PostsWithCursor
+    videoPost(prev: String, next: String, limit: Int): PostsWithCursor
+    createdAt: String
+    modifiedAt: String
+    rewards: Reward
+    referredBy: String
+}
+
+type UsersWithCursor {
+  cursor: String
+  usersArray: [User]
+}
+
+type UserEvent {
+    event: Events
+    user: User
+    notification: Notification
+}
+
+type Subscription {
+    userEvent: UserEvent
+}
+
+type Query {
+    user(id: ID) :User @auth
+    suggestedFriends(id: String!, cursor: String, count: Int): UsersWithCursor @auth
+}
+
+type Mutation {
+    follow(followingId: String!): GenericResponse! @auth
+    unfollow(followerId: String!): GenericResponse! @auth
+    uploadProfilePhoto(file: File!): PhotoUrl! @auth
+    uploadProfileBackgroundPhoto(file: File!): PhotoUrl! @auth
+    deleteProfilePhoto: GenericResponse! @auth
+    deleteBackgroundPhoto:GenericResponse! @auth
+    approveFollower(followerId: String): GenericResponse! @auth
+    rejectFollower(followerId: String): GenericResponse! @auth
+    updatePersonalInfo(personalInfo: PersonalInfoInput!): GenericResponse! @auth
+    updatePersonalContact(personalContact: PersonalContactInput!): GenericResponse! @auth
+    updateUserCustomUrl(customUrls: [CustomUrlsInput]!): GenericResponse! @auth
+    updateUserPlacesHistory(placesHistory: PlacesHistoryInput!): GenericResponse! @auth
+    updateEducationHistory(educationHistory: Education!): GenericResponse! @auth
+    updateWorkHistory(workHistory: WorkHistoryInput!): GenericResponse! @auth
+    updateUserStory(userStory: StoryInput!): GenericResponse! @auth
+    deactiveAccount: GenericResponse! @auth
+    referFriends(emailIds: [String]): GenericResponse! @auth
+}

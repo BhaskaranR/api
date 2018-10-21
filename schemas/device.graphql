@@ -1,0 +1,15 @@
+input DeviceKeyInput {
+    auth: String!
+    p256dh: String!
+}
+
+input Device {
+    endpoint: String!
+    expirationTime: String
+    keys: DeviceKeyInput
+}
+
+type Mutation  {
+    registerDevice(deviceInput: Device): GenericResponse @auth
+    unregisterDevice(deviceInput: Device): GenericResponse @auth
+}

@@ -1,0 +1,7 @@
+type PhotoUrl {
+    id: ID
+    xlarge: String
+    large: String
+    normal: String
+    small: String
+}
